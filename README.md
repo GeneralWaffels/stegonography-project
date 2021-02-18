@@ -1,1 +1,1 @@
-# GroupD Steganography Program
+# Group D Steganography Program
