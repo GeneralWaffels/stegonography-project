@@ -5,24 +5,7 @@ Might be a waste of time, a lot of this functionality is already present in exis
 Could migrate to those at some point.
 */
 
-#include <stdio.h>
-#include <stdint.h>
-#include <stdlib.h>
-
-//all images can be stored in this structure
-typedef struct imageArrayStructure {
-    unsigned int fileType;
-    /*Marker showing what filetype the image was originally, different number for each type:
-    0:bmp
-    1:...
-    */
-    unsigned int width;
-    unsigned int height;
-    unsigned int colourDepth; //number of bits per pixel
-    unsigned int headerLength; //length of header in bytes
-    uint8_t* header; //storing header allows original to be preserved, making it less obvious file has been modified
-    uint8_t* pixels;
-} imageArray;
+#include "file_handler.h"
 
 //convert bmp image to imageArray type
 //returns pointer to imageArray
@@ -89,13 +72,4 @@ void arrayToBmp(char* name, imageArray* image) { //takes name for the file that 
     fwrite(image->pixels, 1, image->width*image->height*(image->colourDepth/8), file); //write pixels
 
     fclose(file);
-}
-
-//main for testing
-int main() {
-    arrayToBmp(
-        "../testData/output.bmp",
-        bmpToArray("../testData/test.bmp")
-    );
-    return 0;
 }
