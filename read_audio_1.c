@@ -10,6 +10,7 @@ int audio_samples ()
     int n;                // buffer index
      
     // Open WAV file with FFmpeg and read raw samples via the pipe.
+ // to allow this part of the code to work you need to [ sudo apt-get install ffmpeg ] 
     FILE *pipein;
     pipein = popen("ffmpeg -i test.wav -f s16le -ac 1 -", "r");
     fread(buf, 2, N, pipein);
