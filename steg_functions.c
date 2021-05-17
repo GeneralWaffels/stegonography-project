@@ -19,7 +19,9 @@ imageArray* leastSigBitEncodeData(imageArray* container, char* fileName) { //tak
     //get size of file to hide
     fseek(file, 0L, SEEK_END);
     unsigned int size = ftell(file);
-    printf("size: %d\n", size);
+    #ifdef DEBUG
+    printf("Size of file to hide: %d bytes\n", size);
+    #endif
     fseek(file, 0L, SEEK_SET);
 
     //check file will fit in container
@@ -28,6 +30,8 @@ imageArray* leastSigBitEncodeData(imageArray* container, char* fileName) { //tak
         return NULL;
     }
 
+    puts("Encoding data into image...");
+
     uint8_t currentByte;
     int currentBit;
     uint8_t bitmask;
@@ -35,12 +39,9 @@ imageArray* leastSigBitEncodeData(imageArray* container, char* fileName) { //tak
     for (int byte = 0; byte < size; ++byte) {
         bitmask = 0x80; //reset bitmask after each byte
         fread(&currentByte, 1, 1, file); //read byte of file
-        printf("current byte: %02x\n", currentByte);
         for(int bit = 0; bit < 8; ++bit) { //for each bit of byte
             currentBit = currentByte & bitmask; //use bitmask to get value of just one bit
             //change byte in pixel array based on result
-            printf("current bit: %02x\n", currentBit);
-            printf("bitmask: %02x\n", bitmask);
             if (currentBit == 0x0) {
                 container->pixels[byte*8 + bit] &= 0xFE; //and bitmask with 11111110, setting last bit to 0 while retaining other bits
             }
@@ -53,6 +54,7 @@ imageArray* leastSigBitEncodeData(imageArray* container, char* fileName) { //tak
 
     fclose(file);
 
+    puts("Done");
     return container;
 }
 
@@ -63,6 +65,8 @@ imageArray* leastSigBitEncodeImage(imageArray* container, imageArray* hiddenImg)
         puts("Image to hide must be smaller than the image it is being hidden in");
         return NULL;
     }
+
+    puts("Encoding image into image...");
 
     for (int row = 0; row < hiddenImg->height; ++row) {
         for (int col = 0; col < hiddenImg->width; ++col) {
@@ -81,11 +85,13 @@ imageArray* leastSigBitEncodeImage(imageArray* container, imageArray* hiddenImg)
         }
     }
 
+    puts("Done");
     return container;
 }
 
 //reads each least sig bit and places them together to make a file
 void leastSigBitDecodeData(imageArray* container, char* fileName) { //takes imageArray containing hidden data and file name to output data to
+    puts("Decoding data from image...");
     FILE* file = fopen(fileName, "wb");
 
     uint8_t currentByte;
@@ -105,10 +111,13 @@ void leastSigBitDecodeData(imageArray* container, char* fileName) { //takes imag
             newByte = 0x0;
         }
     }
+
+    puts("Done");
 }
 
 //reads each least sig bit and interprets them as colour, modifying the imageArray accordingly
 imageArray* leastSigBitDecodeImage(imageArray* container) { //takes imageArray containing hidden image
+    puts("Decoding image from image...");
     for (int byte = 0; byte < container->height*container->width*container->numColours; ++byte) { //for every byte of pixel data
         uint8_t leastBit = container->pixels[byte] & 0x01u; //get last bit
         if (leastBit == 0x01u) { //convert bit to byte
@@ -121,6 +130,7 @@ imageArray* leastSigBitDecodeImage(imageArray* container) { //takes imageArray c
         container->pixels[byte] = leastBit; //write this conversion to the imageArray
     }
 
+    puts("Done");
     return container;
 }
 

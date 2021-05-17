@@ -38,10 +38,12 @@ imageArray* bmpToArray(char* name) { //takes name of file as char array
     fread(&colourDepth, 2, 1, file);
 
     //print values for debugging
+    #ifdef DEBUG //build with -DDEBUG flag in gcc
     printf("offset: %08x\n", offset);
     printf("width: %08x\n", width);
     printf("height: %08x\n", height);
     printf("colour depth: %04x\n", colourDepth);
+    #endif
 
     //allocate memory for new imageArray and set values
     imageArray* image = malloc(sizeof(imageArray));
