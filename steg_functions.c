@@ -56,6 +56,34 @@ imageArray* leastSigBitEncodeData(imageArray* container, char* fileName) { //tak
     return container;
 }
 
+//uses least sig bits to store a colour, making up a second image
+imageArray* leastSigBitEncodeImage(imageArray* container, imageArray* hiddenImg) { //takes two imageArrays, one to hide and the other to hide that in
+    //check hiddenImg is smaller than the container
+    if (container->width < hiddenImg->width || container->height < hiddenImg->height) {
+        puts("Image to hide must be smaller than the image it is being hidden in");
+        return NULL;
+    }
+
+    for (int row = 0; row < hiddenImg->height; ++row) {
+        for (int col = 0; col < hiddenImg->width; ++col) {
+            for (int i = 0; i < 3; ++i) { //each byte for R, G and B
+                uint8_t hiddenByte = hiddenImg->pixels[(row*hiddenImg->width + col)*hiddenImg->numColours+i]; //get colour byte to hide
+                int pixelToChange = (row*container->width + col)*hiddenImg->numColours+i;
+                if (hiddenByte < 0x80u) { //convert from one byte to 1 bit
+                    hiddenByte = 0xFEu;
+                }
+                else {
+                    hiddenByte = 0xFFu;
+                    container->pixels[pixelToChange] |= 0x01u; //set container lsb to 1
+                }
+                container->pixels[pixelToChange] &= hiddenByte; //set container lsb to 0
+            }
+        }
+    }
+
+    return container;
+}
+
 //reads each least sig bit and places them together to make a file
 void leastSigBitDecodeData(imageArray* container, char* fileName) { //takes imageArray containing hidden data and file name to output data to
     FILE* file = fopen(fileName, "wb");
@@ -79,6 +107,23 @@ void leastSigBitDecodeData(imageArray* container, char* fileName) { //takes imag
     }
 }
 
+//reads each least sig bit and interprets them as colour, modifying the imageArray accordingly
+imageArray* leastSigBitDecodeImage(imageArray* container) { //takes imageArray containing hidden image
+    for (int byte = 0; byte < container->height*container->width*container->numColours; ++byte) { //for every byte of pixel data
+        uint8_t leastBit = container->pixels[byte] & 0x01u; //get last bit
+        if (leastBit == 0x01u) { //convert bit to byte
+            leastBit = 0xFFu;
+        } 
+        else {
+            leastBit = 0x00u;
+        }
+        
+        container->pixels[byte] = leastBit; //write this conversion to the imageArray
+    }
+
+    return container;
+}
+
 int main() {
     //test file handler by converting from bmp to array and back again
     arrayToBmp(
@@ -90,5 +135,10 @@ int main() {
     imageArray* img = leastSigBitEncodeData(bmpToArray("../testData/test.bmp"), "../testData/test.txt");
     arrayToBmp("../testData/dataEncodeTestOutput.bmp", img);
     leastSigBitDecodeData(bmpToArray("../testData/dataEncodeTestOutput.bmp"), "../testData/dataEncodeTestOutput.txt");
+    
+    //test steg functions by encoding one image in another, then decoding
+    imageArray* img2 = leastSigBitEncodeImage(bmpToArray("../testData/test.bmp"), bmpToArray("../testData/test2.bmp"));
+    arrayToBmp("../testData/imgEncodeTestOutput.bmp", img2);
+    arrayToBmp("../testData/imgDecodeTestOutput.bmp" , leastSigBitDecodeImage(bmpToArray("../testData/imgEncodeTestOutput.bmp")));
     return 0;
 }

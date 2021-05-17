@@ -15,6 +15,7 @@ typedef struct imageArrayStructure {
     unsigned int width;
     unsigned int height;
     unsigned int colourDepth; //number of bits per pixel
+    unsigned int numColours; //number of colours per pixel
     unsigned int headerLength; //length of header in bytes
     uint8_t* header; //storing header allows original to be preserved, making it less obvious file has been modified
     uint8_t* pixels;

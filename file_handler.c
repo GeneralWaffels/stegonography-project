@@ -49,6 +49,7 @@ imageArray* bmpToArray(char* name) { //takes name of file as char array
     image->width = width;
     image->height = height;
     image->colourDepth = colourDepth;
+    image->numColours = 3; //assume RGB bmp
     image->pixels = malloc(width*height*(colourDepth/8));
     image->header = malloc(offset);
     image->headerLength = offset;
@@ -57,7 +58,7 @@ imageArray* bmpToArray(char* name) { //takes name of file as char array
     fread(image->header, 1, offset, file); //read header into array
 
     fseek(file, offset, SEEK_SET); //go to pixel data
-    fread(image->pixels, 1, width*height*colourDepth, file); //read pixels into array
+    fread(image->pixels, 1, width*height*3, file); //read pixels into array
 
     fclose(file);
 
