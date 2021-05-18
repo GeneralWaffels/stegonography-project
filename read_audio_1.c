@@ -46,6 +46,6 @@ void main()
     // -i ------- read data from the standard input in this case the pipe
     // -f s16le ----- tells ffmepg that the fromat of the audio data it reads is raw PCM( pulse code modulation, is to reprsnet the sampled analog signals digitally ), sigend integer, 16 bit and little endian 
     // -ac 1 -------- the number of channes in the audio data it is reading is one  
-}e);
+}
 }
 
