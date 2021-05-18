@@ -10,7 +10,7 @@ Current issues:
 
 #include <stdio.h>
 #include <stdlib.h>
-#include "file_handler.h"
+#include "file_handler2.h"
 
 //uses least sig bits to store each bit of a file
 imageArray* leastSigBitEncodeData(imageArray* container, char* fileName) { //takes an imageArray to hide the file in and the name of the file to hide
@@ -25,7 +25,7 @@ imageArray* leastSigBitEncodeData(imageArray* container, char* fileName) { //tak
     fseek(file, 0L, SEEK_SET);
 
     //check file will fit in container
-    if (!(container->width*container->height*(container->colourDepth/3) >= size)) {
+    if (!(container->width*container->height*container->numColours) >= size) {
         puts("File to hide must be <= 1/8th the size of the container");
         return NULL;
     }
@@ -99,7 +99,7 @@ void leastSigBitDecodeData(imageArray* container, char* fileName) { //takes imag
     uint8_t newByte = 0x0;
     int numBitsWritten = 0;
 
-    for (int byte = 0; byte < (container->width*container->height*(container->colourDepth/3))/8; ++byte) {
+    for (int byte = 0; byte < (container->width*container->height*container->numColours)/8; ++byte) {
         currentByte = container->pixels[byte];
         currentBit = currentByte & 0x01; //get just last bit of byte
         newByte |= currentBit<<(7-numBitsWritten); //shift bit left by 7-numBitsWritten so each bit will be in a different place in the new byte
@@ -135,20 +135,10 @@ imageArray* leastSigBitDecodeImage(imageArray* container) { //takes imageArray c
 }
 
 int main() {
-    //test file handler by converting from bmp to array and back again
-    arrayToBmp(
-        "../testData/fileHandlerTestOutput.bmp",
-        bmpToArray("../testData/test.bmp")
-    );
+    //tests
+    imageArray* img = leastSigBitEncodeData(loadImg("../testData/test.bmp"), "../testData/test.txt");
+    outputPng("../testData/dataEncodeTestOutput.png", img);
+    leastSigBitDecodeData(loadImg("../testData/dataEncodeTestOutput.png"), "../testData/dataEncodeTestOutput.txt");
 
-    //test steg functions by encoding data then decoding
-    imageArray* img = leastSigBitEncodeData(bmpToArray("../testData/test.bmp"), "../testData/test.txt");
-    arrayToBmp("../testData/dataEncodeTestOutput.bmp", img);
-    leastSigBitDecodeData(bmpToArray("../testData/dataEncodeTestOutput.bmp"), "../testData/dataEncodeTestOutput.txt");
-    
-    //test steg functions by encoding one image in another, then decoding
-    imageArray* img2 = leastSigBitEncodeImage(bmpToArray("../testData/test.bmp"), bmpToArray("../testData/test2.bmp"));
-    arrayToBmp("../testData/imgEncodeTestOutput.bmp", img2);
-    arrayToBmp("../testData/imgDecodeTestOutput.bmp" , leastSigBitDecodeImage(bmpToArray("../testData/imgEncodeTestOutput.bmp")));
     return 0;
 }
