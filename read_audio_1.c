@@ -1,5 +1,6 @@
 //This code reads 20ms from the beginning of the .wav file and then prints all the values into a .csv file
 //The wav file format is 16 bitt -signed integer samples, with a sampling frequency of 44.1khz
+// 44.1khz means that 1 second of audio has 44,100 samples
 
 //to compile this ocde you need to 
 // gcc read_audio_1.c -o read_audio_1 -lm
