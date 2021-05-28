@@ -34,9 +34,11 @@ int main()
       		perror("Error opening file");//if file doesn't exist then print error message
       		return(-1);//program exit due to error
    	}
+   	if( fgets (textInp, 100, fileInp)!=NULL ) {
+   	}
 	fclose(fileInp);//close file
 	
-	
+	puts(textInp);
 	char final[(sizeof(textInp)*2)];//create character variable that is twice the size of the text from the file such that for each character in the text there is space for another character to be placed before it
 
 	
