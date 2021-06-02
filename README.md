@@ -7,3 +7,4 @@ Exapandable Steganography program with various ouput file types
 Thijs De Clerck <https://github.com/GeneralWaffels> 
 Alex Good <https://github.com/chaosstorm115>
 Nathan Chamberlain <https://github.com/nathanc18>
+Palak Mittal <https://github.com/PalakMittal>
