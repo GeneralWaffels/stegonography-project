@@ -10,7 +10,7 @@ Current issues:
 
 #include <stdio.h>
 #include <stdlib.h>
-#include "file_handler2.h"
+#include "file_handler.h"
 
 //uses least sig bits to store each bit of a file
 imageArray* leastSigBitEncodeData(imageArray* container, char* fileName) { //takes an imageArray to hide the file in and the name of the file to hide
