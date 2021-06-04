@@ -70,7 +70,7 @@ imageArray* leastSigBitEncodeImage(imageArray* container, imageArray* hiddenImg)
 
     for (int row = 0; row < hiddenImg->height; ++row) {
         for (int col = 0; col < hiddenImg->width; ++col) {
-            for (int i = 0; i < 3; ++i) { //each byte for R, G and B
+            for (int i = 0; i < container->numColours; ++i) { //each byte for R, G and B
                 uint8_t hiddenByte = hiddenImg->pixels[(row*hiddenImg->width + col)*hiddenImg->numColours+i]; //get colour byte to hide
                 int pixelToChange = (row*container->width + col)*hiddenImg->numColours+i;
                 if (hiddenByte < 0x80u) { //convert from one byte to 1 bit
@@ -122,9 +122,6 @@ imageArray* leastSigBitDecodeImage(imageArray* container) { //takes imageArray c
         uint8_t leastBit = container->pixels[byte] & 0x01u; //get last bit
         if (leastBit == 0x01u) { //convert bit to byte
             leastBit = 0xFFu;
-        } 
-        else {
-            leastBit = 0x00u;
         }
         
         container->pixels[byte] = leastBit; //write this conversion to the imageArray

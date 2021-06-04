@@ -32,14 +32,17 @@ imageArray* loadImg(char* name) {
 void outputBmp(char* name, imageArray* image) { //takes name for the file that will be created and the imageArray to be converted
     stbi_write_bmp(name, image->width, image->height, image->numColours, image->pixels);
     stbi_image_free(image->pixels);
+    free(image);
 }
 //convert to png
 void outputPng(char* name, imageArray* image) {
     stbi_write_png(name, image->width, image->height, image->numColours, image->pixels, image->width * image->numColours);
     stbi_image_free(image->pixels);
+    free(image);
 }
 //convert to jpg
 void outputJpg(char* name, imageArray* image) {
     stbi_write_jpg(name, image->width, image->height, image->numColours, image->pixels, image->width * image->numColours);
     stbi_image_free(image->pixels);
+    free(image);
 }
