@@ -1,3 +1,7 @@
+//For this code to work please install FFMPEG software
+//sudo apt-get install ffmpeg
+
+
 #include <stdio.h>
 #include <stdint.h>
 #include <stdlib.h>
