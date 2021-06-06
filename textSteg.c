@@ -66,19 +66,36 @@ int encodeText()
 		strcat(positions, position);
 	}
 	
-	printf("%s. the jay, pig, fox, zebra and my %s wolves quack\n",container, positions);
+	printf("You're encoded message is:\n%s. the jay, pig, fox, zebra and my %s wolves quack\n",container, positions);
 	
+	char filename2[100];
 	FILE *fileOut;//declare file pointer
 	printf("Enter a name for the file where your encoded message will be saved\n");
-	scanf("%s",filename);
-	fileOut = fopen(filename,"w");//open file to write to
+	while((getchar())!='\n');//clear input buffer by reading values in it until reaching '\n' character so the program doesn't take the extra characters when looking for file name
+	fgets(filename2,100,stdin);
+	int valid=0;
+	while(valid==0){
+		for (i=0;i<strlen(filename2);i++){
+			if ((filename2[i] == '/')){
+				printf("Invalid filename, cannot use '/'\n"); 
+				printf("Enter a name for the file where your encoded message will be saved\n");
+				while((getchar())!='\n');//clear input buffer by reading values in it until reaching '\n' character so the program doesn't take the extra characters when looking for file name
+				fgets(filename2,100,stdin);
+			}
+			else{
+				valid=1;
+			}
+		}
+	}
+	
+	fileOut = fopen(filename2,"w");//open file to write to
 	//write output to file
    	fputs(container, fileOut);
    	fputs(". the jay, pig, fox, zebra and my ",fileOut);
    	fputs(positions, fileOut);
    	fputs(positions,fileOut);
    	fputs(" wolves quack\n",fileOut);
-	fclose(fileInp);
+	fclose(fileOut);
 	
 	return(0);
 }
@@ -126,15 +143,32 @@ int decodeText()
 		strcat(message,character);//append current character to message string
 	}
 	
-	puts(message);
+	printf("You're decoded message is:\n%s\n",message);
 	
+	char filename2[100];
 	FILE *fileOut;//declare file pointer
-	printf("Enter a name for the file where your encoded message will be saved\n");
-	scanf("%s",filename);
-	fileOut = fopen(filename,"w");//open file to write to
+	printf("Enter a name for the file where your decoded message will be saved\n");
+	while((getchar())!='\n');//clear input buffer by reading values in it until reaching '\n' character so the program doesn't take the extra characters when looking for file name
+	fgets(filename2,100,stdin);
+	int valid=0;
+	while(valid==0){
+		for (i=0;i<strlen(filename2);i++){
+			if ((filename2[i] == '/')){
+				printf("Invalid filename, cannot use '/'\n"); 
+				printf("Enter a name for the file where your decoded message will be saved\n");
+				while((getchar())!='\n');//clear input buffer by reading values in it until reaching '\n' character so the program doesn't take the extra characters when looking for file name
+				fgets(filename2,100,stdin);
+			}
+			else{
+				valid=1;
+			}
+		}
+	}
+	
+	fileOut = fopen(filename2,"w");//open file to write to
 	//write output to file
-   	fputs(message, fileOut);
-	fclose(fileInp);
+	fputs(message, fileOut);
+	fclose(fileOut);
 
 	return(0);	
 }
@@ -150,12 +184,10 @@ int main()
 	}
 	if(c =='E'){
 		while((getchar())!='\n');//clear input buffer by reading values in it until reaching '\n' character so the program doesn't take the extra characters when looking for file name
-		printf("This is encodeText()\n");
 		encodeText();
 	}
 	else if(c =='D'){
 		while((getchar())!='\n');//clear input buffer by reading values in it until reaching '\n' character so the program doesn't take the extra characters when looking for file name
-		printf("This is decodeText()\n");
 		decodeText();
 	}
 	else{
