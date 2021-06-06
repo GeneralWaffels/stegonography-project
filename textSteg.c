@@ -151,9 +151,10 @@ int decodeText()
 	while((getchar())!='\n');//clear input buffer by reading values in it until reaching '\n' character so the program doesn't take the extra characters when looking for file name
 	fgets(filename2,100,stdin);
 	int valid=0;
+	//while loop that verifies the file name is valid
 	while(valid==0){
 		for (i=0;i<strlen(filename2);i++){
-			if ((filename2[i] == '/')){
+			if ((filename2[i] == '/')){//'/' is an invalid character for file names
 				printf("Invalid filename, cannot use '/'\n"); 
 				printf("Enter a name for the file where your decoded message will be saved\n");
 				while((getchar())!='\n');//clear input buffer by reading values in it until reaching '\n' character so the program doesn't take the extra characters when looking for file name
@@ -167,7 +168,7 @@ int decodeText()
 	
 	fileOut = fopen(filename2,"w");//open file to write to
 	//write output to file
-	fputs(message, fileOut);
+	fputs(message, fileOut);//write decoded text to specified file
 	fclose(fileOut);
 
 	return(0);	
@@ -190,7 +191,7 @@ int main()
 		while((getchar())!='\n');//clear input buffer by reading values in it until reaching '\n' character so the program doesn't take the extra characters when looking for file name
 		decodeText();
 	}
-	else{
+	else{//Catch any input that somehow makes it through and exit with error
 		printf("Error\n");
 		return(-1);
 	}
