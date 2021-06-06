@@ -87,6 +87,7 @@ int encodeText()
 			}
 		}
 	}
+	filename2[strcspn(filename2, "\n")] = 0; //strip trailing newline
 	
 	fileOut = fopen(filename2,"w");//open file to write to
 	//write output to file
@@ -165,6 +166,7 @@ int decodeText()
 			}
 		}
 	}
+	filename2[strcspn(filename2, "\n")] = 0; //strip trailing newline
 	
 	fileOut = fopen(filename2,"w");//open file to write to
 	//write output to file
