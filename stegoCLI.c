@@ -6,7 +6,6 @@
 #include <sys/types.h> //These two --
 #include <unistd.h>    //--Are for forking and waiting. Maybe remove?
 #include <stdlib.h> //For system(), to use gcc to compile all files
-#include <sys/resource.h>
 #include <string.h> //For strcmp, to check user input against possible cases
 
 //This is what will be run first. All the other programs will be activated from here. 
@@ -33,7 +32,6 @@ int main(){
         system("gcc -o Audio_Stego.out Audio_Stego.c"); //Compile files
         system("gcc -o Encrpyt.out Encrpyt.c");
         system("gcc file_handler.c steg_functions.c -o file_handler.out -lm  ");
-        system("gcc -o steg1.out steg1.c");
         //system("gcc -o steg_functions.out steg_functions.c file_handler_header.c");
         system("gcc -o textSteg.out textSteg.c");
         
