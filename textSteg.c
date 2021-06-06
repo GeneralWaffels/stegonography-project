@@ -143,19 +143,23 @@ int main()
 {
 
 	printf("Do you want to (E)ncode or (D)ecode?\n");//ask user for input of E or D
-	char c;//char to store input result
+	int c;//char to store input result
 	//while loop to ensure that the only input is E or D; all other input ignored
 	while((c!='E')&&(c!= 'D')){
-		c =getchar();
+		c= getchar();
 	}
-	if(c=='E'){
+	if(c =='E'){
+		while((getchar())!='\n');//clear input buffer by reading values in it until reaching '\n' character so the program doesn't take the extra characters when looking for file name
+		printf("This is encodeText()\n");
 		encodeText();
 	}
-	else if(c=='D'){
+	else if(c =='D'){
+		while((getchar())!='\n');//clear input buffer by reading values in it until reaching '\n' character so the program doesn't take the extra characters when looking for file name
+		printf("This is decodeText()\n");
 		decodeText();
 	}
 	else{
-		printf("Error");
+		printf("Error\n");
 		return(-1);
 	}
 	
