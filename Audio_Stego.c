@@ -12,8 +12,12 @@ int main()
     //Declare all the variables
     char tgt[50];
     
-    
-    printf("You have entered Audio Stego");
+//Quick explaination of the program and what is acceptable
+printf("\n-----Welcome to Audio Stegnography-----");
+printf("\nFew things to remember: ");
+printf("\n1. Your audio file must be in the same location as this code and the your binary output file");
+printf("\n2. The format of the audio file must be WAV");
+printf("\n3. Be aware that the file may become faster or slower if the frequency of the audio file is not 441.kHz");
     
     //Ask for the name of binary output message [Nathan's output]
     printf("\nName of BINARY output file: ");
@@ -26,29 +30,28 @@ int main()
 void stego(char tgt[])
 {
     //Overview
-    // Launch two instances of FFmpeg, one to read the original WAV
-    // file and another to write the modified WAV file. In each case,
-    // data passes between this program and FFmpeg through a pipe.
+//Lauches two instances of FFMPEG, one to read the values and one to submit.
+//In the interim is where the LSB encryption happens
    
     //Declare all the variables
-    int16_t sample;
-    int count;
-    int n=0;
-    int len;
-    char str[10000];
-    int c, k;
-    char line[17];
-    char *eptr;
-    char command[100];
-    char audio_name[50];
-    int i=1;
+    int16_t sample; //Storing each sample values
+    int count; //Counting sample value
+    int n=0; //Dummy variable used as incrementing after every turn of the while loop
+    int len; //Stores the length of the binary string
+    char str[10000]; //Stores the actual binary string
+    int c, k; //Dummy variables used in converting to binary
+    char line[17]; //Length of each line in the file: file.txt, it is a known size
+    char *eptr; //Temporary pointer
+    char command[100]; //Buffer stroing FFMPEG command used later
+    char audio_name[50]; //Stores the audio file name
+    int i=1; //Variables used to print binary numbers in the file:file.txt
     int o=0;
     
     //Declare all the files
-    FILE *pipein;
-    FILE *pipeout;
-    FILE *tgtfile;
-    FILE *fptr;
+    FILE *pipein; //Reading values from the audio file, one at a time
+    FILE *pipeout; //Putting new sample values through one at a time
+    FILE *tgtfile; //Binary string file [coming from Nathan's code]
+    FILE *fptr; //Storing sample values at a time in file.txt
     
     //Asking for the name of the audio file
     printf("\nWhat is the name of your AUDIO file: ");
@@ -63,7 +66,7 @@ void stego(char tgt[])
     
     if (tgtfile == NULL)
     {
-        printf("Error opening the output file");
+        printf("\nError opening the output file\n");
         exit(1);
     }
     
@@ -75,12 +78,11 @@ void stego(char tgt[])
             //workout the length of the string
             len = strlen(str);
             
-            
+            //checker
             //printf("\nLength of the binary string is: %d", len);
     }
     
     fclose(tgtfile);
-    
     
     
     //Open both pipes
@@ -136,6 +138,7 @@ void stego(char tgt[])
             fclose(fptr);
         }
         
+        //increment the buffer
         ++n;
         
         //passing each sample separately and making it into a wav file
@@ -146,4 +149,5 @@ void stego(char tgt[])
     // Close input and output pipes
     pclose(pipein);    
     pclose(pipeout);
+    
 }
