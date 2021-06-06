@@ -10,6 +10,7 @@ Current issues:
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include "file_handler.h"
 
 //uses least sig bits to store each bit of a file
@@ -132,10 +133,78 @@ imageArray* leastSigBitDecodeImage(imageArray* container) { //takes imageArray c
 }
 
 int main() {
-    //tests
-    imageArray* img = leastSigBitEncodeData(loadImg("../testData/test.bmp"), "../testData/test.txt");
-    outputPng("../testData/dataEncodeTestOutput.png", img);
-    leastSigBitDecodeData(loadImg("../testData/dataEncodeTestOutput.png"), "../testData/dataEncodeTestOutput.txt");
+    int encode = 0;
+    int image = 0;
+    int c;
+    char arg1[100];
+    char arg2[100];
+    char output[100];
+    imageArray* img;
+
+    puts("Welcome to image steganography");
+    puts("Do you want to (E)ncode or (D)ecode?");
+    while((c!='E')&&(c!= 'D')){
+		c= getchar();
+	}
+    if (c == 'E') {
+        encode = 1;
+    }
+    while((getchar())!='\n'); //clear input buffer
+
+    puts("What do you want the output file to be named?");
+    fgets(output, sizeof(output), stdin);
+    output[strcspn(output, "\n")] = 0; //strip trailing newline
+
+    if (encode == 1) {
+        puts("Do you want to hide a (F)ile or an (I)mage in an image?");
+        while((c!='F')&&(c!= 'I')){
+		    c= getchar();
+	    }
+        if (c == 'I') {
+            image = 1;
+        }
+        while((getchar())!='\n'); //clear input buffer
+
+        puts("What is the name of the image to hide the file in?");
+        fgets(arg1, sizeof(arg1), stdin);
+        arg1[strcspn(arg1, "\n")] = 0; //strip trailing newline
+
+        if (image == 1) {
+            puts("What is the name of the image you want to hide?");
+            fgets(arg2, sizeof(arg2), stdin);
+            arg2[strcspn(arg2, "\n")] = 0; //strip trailing newline
+            img = leastSigBitEncodeImage(loadImg(arg1), loadImg(arg2));
+        }
+
+        else {
+            puts("What is the name of the file you want to hide?");
+            fgets(arg2, sizeof(arg2), stdin);
+            arg2[strcspn(arg2, "\n")] = 0; //strip trailing newline
+            img = leastSigBitEncodeData(loadImg(arg1), arg2);
+        }
+        outputPng(output, img);
+    }
+    else {
+        puts("Do you want to decode a (F)ile or an (I)mage from an image?");
+        while((c!='F')&&(c!= 'I')){
+		    c= getchar();
+	    }
+        if (c == 'I') {
+            image = 1;
+        }
+        while((getchar())!='\n'); //clear input buffer
+
+        puts("What is the file you want to decode from?");
+        fgets(arg1, sizeof(arg1), stdin);
+        arg1[strcspn(arg1, "\n")] = 0; //strip trailing newline
+        if (image == 1) {
+            img = leastSigBitDecodeImage(loadImg(arg1));
+            outputPng(output, img);
+        }
+        else {
+            leastSigBitDecodeData(loadImg(arg1), output);
+        }
+    }
 
     return 0;
 }
