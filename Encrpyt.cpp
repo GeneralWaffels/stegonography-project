@@ -19,7 +19,7 @@ int hex_to_binary(char*);
 int main() {
 
     printf("Enter the name of the .txt file: ");                         // enter name of file to be opened and read
-    fgets(file, 256, stdin);                                        // *file must be in same folder as program folder (visual basic)
+    fgets(file, 256, stdin);                                        // *file must be in same folder as program folder (visual studio)
 
     printf("Enter your output file name:");                         // enter name of file to be created with encrypted text
     scanf("%s", tgt);                                               // file will be saved in the same folder where the intiial text file must be
