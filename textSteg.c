@@ -1,7 +1,7 @@
-//encrypt text for extra security 
-//file can be empty - add error message
-//create decrypter
-//better comments
+//[IMPROVEMENT IDEAS]
+
+//Encrypt text for extra security 
+//Split up the long number/less suspicious way of storing it in output
 
 #include <stdio.h>
 #include <stdlib.h>
