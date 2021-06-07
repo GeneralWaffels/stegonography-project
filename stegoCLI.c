@@ -7,12 +7,70 @@
 #include <unistd.h>    //--Are for forking and waiting. Maybe remove?
 #include <stdlib.h> //For system(), to use gcc to compile all files
 #include <string.h> //For strcmp, to check user input against possible cases
+#include <unistd.h>
+
+void check_permissions(void){ //Check if programs will be able to write to, and create files.
+
+    char filepath[128];
+    getcwd(filepath,sizeof(filepath));
+    printf("Directory this program was run from is %s\n", filepath);
+    
+    int returnval = access(filepath, W_OK); //using access() to check if we have permissions for this directory. OK returns 0, anything else means we do not.
+    if (returnval ==0){
+        printf("This program has write permissions.\n");
+    }
+    else{
+        printf("This program does not have execute permissions.\n");
+    }
+
+    returnval = access(filepath, R_OK);
+    if (returnval == 0){
+        printf("This program has read permissions.\n");
+    }
+    else{
+        printf("This program does not have execute permissions.\n");
+    }
+
+    returnval = access(filepath, X_OK);
+    if (returnval == 0){
+        printf("This program has execute permissions.\n");
+    }
+    else{
+        printf("This program does not have execute permissions.\n");
+    }
+}
 
 //This is what will be run first. All the other programs will be activated from here. 
+void ask_encrypt(void){
+    int i=0;
+    char encrypt_yn[32];
+    while(i!=1){
+            printf("Do you want to encrypt your text file first?\n");
+                fgets(encrypt_yn, 32, stdin);                                //get user input from terminal and place it into 'input' variable
+                encrypt_yn[strcspn(encrypt_yn, "\n")] = 0;
+                encrypt_yn[strcspn(encrypt_yn, "\0")] = 0;
+                //printf("%s", encrypt_yn);                                    Debugging
+                if(*encrypt_yn =='y'){
+                    printf("Running Encrpyt.out (text to binary converter)\n");
+                    system("./Encrpyt.out"); 
+                }
+                else if(*encrypt_yn =='n'){
+                    i=1;
+                }
+                else{
+                    printf("\nUnknown response.\n");
+                }    
+    }
+
+    return;
+}
 
 int main(){
-
+    printf("First, checking if the program has write permissions in the current directory. Without them, you cannot create or edit files.\n");
+    check_permissions();
     char input[32];
+
+    int encrypt_ticker=0; //Initialise this to 0, so that the while loops to check for encryption work.
     printf("\nThis is Group D's Steganography program.\n");
     while(1){ //Loops program, as after system() is called, and the external function has run, it returns to this program.
         printf("Type the appropriate number for what you want to do.\n");
@@ -23,17 +81,16 @@ int main(){
         //fork(); //fork() does *not* work on windows machines. 
         
 	    /* Check if executable files have already been compiled with gcc */
-        if( access( "Audio_Stego.out", F_OK ) == 0 ) {
-        //Check if the first executable alphabetically exists. Replace with counting how many .out files there are? Unsure how to check if all unique .out files exist.
+        if( access( "Audio_Stego.out", F_OK ) == 0 ) { //Check if the first executable alphabetically exists. Replace with counting how many .out files there are? Unsure how to check if all unique .out files exist.
+        
 	    } 
         else {
         //first executable does not exist, either due to not being run previously or been deleted
-        printf("First executable not found, (re)compiling all executables.");
-        system("gcc -o Audio_Stego.out Audio_Stego.c"); //Compile files
-        system("gcc -o Encrpyt.out Encrpyt.c");
-        system("gcc file_handler.c steg_functions.c -o file_handler.out -lm  ");
-        //system("gcc -o steg_functions.out steg_functions.c file_handler_header.c");
-        system("gcc -o textSteg.out textSteg.c");
+        printf("First executable not found, (re)compiling all executables.\n");
+        system("gcc -o Audio_Stego.out Audio_Stego.c \n "); //Compile files. A newline is needed at the end of all of these, otherwise some may be skipped before the next system() is called.
+        system("gcc -o Encrpyt.out Encrpyt.c \n");
+        system("gcc file_handler.c steg_functions.c -o file_handler.out -lm  \n");
+        system("gcc -o textSteg.out textSteg.c \n");
         
 	    }
 		/* Compare user input to known commands. I'd do cases here, but I was already using char[] by the time I realised switch cases only work with integers. */
@@ -43,14 +100,16 @@ int main(){
     		system("./textSteg.out");
 		}
 		else if( 0 == strcmp(input, "2") ){ //User wants to hide text within BMP image
-			printf("Running steg_functions.out\n"); //Currently fails to compile this.
-			system("./Encrpyt.out"); 
-			system("./steg_functions.out");
+			
+            ask_encrypt();
+            
+            printf("Running file_handler.out\n"); //Currently fails to compile this.
+			system("./file_handler.out");
 		}
 		else if( 0 == strcmp(input, "3") ){ //User wants to hide text within Audio file
 			printf("Running Encrpyt.out (text to binary converter)\n");
 			system("./Encrpyt.out"); //Hiding text within audio needs text to first be converted to binary.
-		
+    
 			printf("Running Audio_Stego.out \n");
 		
 			system("./Audio_Stego.out");
