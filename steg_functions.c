@@ -135,6 +135,7 @@ imageArray* leastSigBitDecodeImage(imageArray* container) { //takes imageArray c
 int main() {
     int encode = 0;
     int image = 0;
+    int outputFormat = 0;
     int c;
     char arg1[100];
     char arg2[100];
@@ -182,7 +183,6 @@ int main() {
             arg2[strcspn(arg2, "\n")] = 0; //strip trailing newline
             img = leastSigBitEncodeData(loadImg(arg1), arg2);
         }
-        outputPng(output, img);
     }
     else {
         puts("Do you want to decode a (F)ile or an (I)mage from an image?");
@@ -199,11 +199,26 @@ int main() {
         arg1[strcspn(arg1, "\n")] = 0; //strip trailing newline
         if (image == 1) {
             img = leastSigBitDecodeImage(loadImg(arg1));
-            outputPng(output, img);
         }
         else {
             leastSigBitDecodeData(loadImg(arg1), output);
+            return 0;
         }
+    }
+    puts("Do you want to output a (P)ng or (B)mp?");
+    while((c!='P')&&(c!= 'B')){
+		c= getchar();
+	}
+    if (c == 'P') {
+        outputFormat = 1;
+    }
+    while((getchar())!='\n'); //clear input buffer
+
+    if (outputFormat == 1) {
+        outputPng(output, img);
+    }
+    else {
+        outputBmp(output, img);
     }
 
     return 0;
