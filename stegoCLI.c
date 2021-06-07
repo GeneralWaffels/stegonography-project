@@ -40,7 +40,6 @@ void check_permissions(void){                       //Check if programs will be 
     }
 }
 
-//This is what will be run first. All the other programs will be activated from here. 
 void ask_encrypt(void){
     int i=0;
     char encrypt_yn[32];
