@@ -74,7 +74,7 @@ int main(){
     printf("\nThis is Group D's Steganography program.\n");
     while(1){                                                                   //Loops program, as after system() is called, and the external function has run, it returns to this program.
         printf("Type the appropriate number for what you want to do.\n");
-        printf("1: Encrypt/Decrypt a text file, by hiding a message within another text file. \n2: Hide a text file within a .BMP image.\n3: Hide a text file within a .wav audio file.\n4: Change the format of an image file. (?) CONFIRM THIS\n");
+        printf("1: Encrypt/Decrypt a text file, by hiding a message within another text file. \n2: Hide a text file within a .BMP image.\n3: Hide a text file within a .wav audio file.\n\n");
     
         fgets(input, 32, stdin);                                                //get user input from terminal and place it into 'input' variable
         input[strcspn(input, "\n")] = 0;                                        //remove the newline that fgets takes at the end of user input, if it can fit. Otherwise, does nothing if there is no newline character. https://stackoverflow.com/questions/41252808/string-compare-in-c-with-fgets
@@ -114,10 +114,9 @@ int main(){
 		
 			system("./Audio_Stego.out");
 		}
-		else if( 0 == strcmp(input, "4") ){                                     //User wants to convert images to different format
-			printf("Running file_handler.out\n");
-			system("./file_handler.out");
-		}
+		/*else if( 0 == strcmp(input, "4") ){                                     
+			
+		}*/
 		else{
 		printf("\nCommand not recognised.\n");
 		}
